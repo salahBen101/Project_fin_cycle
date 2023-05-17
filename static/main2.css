@@ -1,0 +1,21 @@
+.prediction-message {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.prediction-message.positive {
+    background-color: #4CAF50;
+}
+
+.prediction-message.negative {
+    background-color: #F44336;
+}
+.rmse-message {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #E0E0E0;
+    color: #333;
+}

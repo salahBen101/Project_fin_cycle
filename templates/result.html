@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="static/main2.css" >
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+
+</head>
+<body>
+    
+    <canvas id="myChart" width="1100" height="300"></canvas>
+    <h2>
+        Our advice is: 
+        {% if y_for_if > prices[-1] %}
+        <div class="prediction-message positive">
+            I suggest you buy for the day because the stock predicted price for tomorrow is going up. Check the predicted price for tomorrow in the chart.
+        </div>
+        {% else %}
+        <div class="prediction-message negative">
+            I suggest you sell for the day because the stock predicted price for tomorrow is going down. Check the predicted price for tomorrow in the chart.
+        </div>
+        {% endif %}
+        {% if rmse %}
+    <div class="rmse-message">
+        RMSE: {{ rmse }}
+    </div>
+    {% endif %}
+    </h2>
+    <script>
+        
+        var dates = {{ dates | safe }};
+        var prices = {{ prices | safe }};
+        var y_pred = {{ y_pred  | safe }};
+
+        dates = dates.map(function(date) {
+            return new Date(date);
+        });
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [
+                    {
+                        label: 'Stock Prices',
+                        data: prices,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        pointRadius: 0,
+                    },
+                    {
+                        label: 'Predicted Price',
+                        data: [{x: dates[dates.length - 1], y: y_pred}],
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        pointRadius: 10,
+                        pointHoverRadius: 12,
+                    },
+                ]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Stock Prices Chart'
+                },
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        time: {
+                            unit: 'week',
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date'
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Price'
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+   
+</body>
+</html> 
